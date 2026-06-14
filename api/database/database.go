@@ -2,30 +2,22 @@ package database
 
 import (
 	"context"
-	"fmt"
+	"os"
 
 	"github.com/redis/go-redis/v9"
 )
 
-// Basic Redis Implementation
+var (
+	Ctx = context.Background()
+	RDB *redis.Client
+)
 
-func main() {
-
-	var client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // No password set
-		DB:       0,  // Use default DB
+func ConnectClient(dbNo int) *redis.Client {
+	var rdb = redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("DB_ADDR"),
+		Password: os.Getenv("DB_PASS"),
+		DB:       dbNo,
 	})
-	var ctx = context.Background()
 
-	err := client.Set(ctx, "foo", "bar", 0).Err()
-	if err != nil {
-		panic(err)
-	}
-
-	val, err := client.Get(ctx, "foo").Result()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("foo", val)
+	return rdb
 }
