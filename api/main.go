@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/joho/godotenv"
 	"github.com/sims-smis/cutlink.git/database"
@@ -15,6 +16,7 @@ import (
 func setupRoutes(app *fiber.App) {
 	app.Get("/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)
+	app.Get("/api/v1/links", routes.GetLinks)
 }
 
 func InitRedisClient() {
@@ -29,6 +31,8 @@ func main() {
 	}
 
 	app := fiber.New()
+
+	app.Use(cors.New())
 
 	app.Use(logger.New())
 

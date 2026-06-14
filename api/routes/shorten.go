@@ -80,6 +80,12 @@ func ShortenURL(c fiber.Ctx) error {
 
 	fmt.Println("Key added ", short)
 
+	database.RDB.SAdd(
+		database.Ctx,
+		"all_links",
+		short,
+	)
+
 	// return nil
 	response := Response{
 		URL:      body.URL,
